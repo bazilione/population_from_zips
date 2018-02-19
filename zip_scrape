@@ -1,0 +1,28 @@
+import csv
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+#open file to save incoming data
+f = csv.writer(open('zips_input.txt', "w")) #using csv writer worked for saving txt
+
+#read the list (not complete) of "valid" zips downloaded from the web
+#(To get the complete list probably should have tried all zips from 00001 to 99999)
+df = pd.read_csv('valid_zips.csv', squeeze = True, dtype = str)
+
+#send request to get data, write it to list_info list and save it into a file
+for i in df:
+    link = 'https://www.zip-codes.com/zip-code/' +str(i) + '/zip-code-' +str(i) +'.asp'
+    print('Requested zip is ' +str(i)) #to check the progress
+    req = requests.get(link)
+    soup = BeautifulSoup(req.text, "lxml")
+    td = soup.find_all(class_='info') #finds all <td> tags within class = 'info'
+    list_info = []
+    for item in td:
+        try:
+            first_elem = item.contents[0] #gets only the item we need
+        except IndexError:
+            pass
+        list_info.append(first_elem) #adds elements into the list_info list
+    #print(list_info)
+    f.writerow(list_info)
