@@ -1,3 +1,5 @@
+#The code sends requests to a web site with US postal code demographics data, scrapes the data, and saves it to a file.
+#Tags:web scraping, BeautifulSoup, population, postal codes, zip codes
 import csv
 import requests
 from bs4 import BeautifulSoup
